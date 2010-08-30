@@ -93,12 +93,7 @@ if (!class_exists("ArenaAuthenticationPlugin")) {
                     $soapResult = $client->AuthenticateWP($params);
                     $result = $soapResult->AuthenticateWPResult->enc_value;
 
-                    //echo '<pre>';
-                    //print_r($soapResult);
-                    //echo '</pre>';
-
                     // Check if authentication failed
-                    // @todo: add setting for admin users to bypass Arena security
                     if (!property_exists($soapResult, 'AuthenticateWPResult') AND !$this->is_admin($username)) {
                         $this->display_error($username);
                         die();
@@ -137,17 +132,11 @@ if (!class_exists("ArenaAuthenticationPlugin")) {
          * If no user exists in the WP database matching the Arena user, we'll create one automatically
          */
         public function create_user($username, $password, $email, $first_name, $last_name, $display_name, $default_role = '') {
-            
             global $wp_version;
-
             require_once(ABSPATH . WPINC . DIRECTORY_SEPARATOR . 'registration.php');
-
-            // Here we go!
             $return = wp_create_user($username, $password, $email);
-
             $user_id = username_exists($username);
 
-            // log errors
             if (is_wp_error($return)) {
                 echo $return->get_error_message();
                 die();
