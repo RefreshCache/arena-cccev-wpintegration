@@ -3,7 +3,7 @@
 Plugin Name: Arena ChMS Authentication Provider
 Plugin URI: http://redmine.refreshcache.com/projects/cccevwpintegration
 Description: This plugin will provide some basic user authentication against your Arena ChMS installation.
-Version: 0.9.1
+Version: 0.9.2
 Author: Jason Offutt
 Author URI: http://twitter.com/jasonoffutt
 License: GPL2
@@ -218,7 +218,8 @@ if (!class_exists("ArenaAuthenticationPlugin")) {
 
         protected function display_error($username) {
             ?>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" <?php language_attributes(); ?>>
     <head>
         <title><?php bloginfo('name'); ?> &rsaquo; <?php echo $title; ?></title>
 	<meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=<?php bloginfo('charset'); ?>" />
@@ -231,7 +232,7 @@ if (!class_exists("ArenaAuthenticationPlugin")) {
         <div id="login"><h1><a href="<?php echo apply_filters('login_headerurl', 'http://wordpress.org/'); ?>" title="<?php echo apply_filters('login_headertitle', __('Powered by WordPress')); ?>"><?php bloginfo('name'); ?></a></h1>
             <div id="login_error">
                 <h2>Oops!</h2>
-                <p>Looks like you might not have permission to edit this blog. If you feel you're being blocked in error, please <a href="mailto:webologists@cccev.com">let us know</a>. Thanks!</p>
+                <p>Looks like you might not have permission to edit this blog. If you feel your access has been blocked in error, please <a href="mailto:<?php bloginfo('admin_email') ?>">let us know</a>. Thanks!</p>
             </div>
         </div>
     </body>
@@ -301,7 +302,7 @@ if (!class_exists("ArenaAuthenticationPlugin")) {
                         </tr>
                     </table>
                     <div class="submit">
-                        <input type="submit" name="update_arenaAuthenticatoinPluginSettings" value="<?php _e("Update Settings", "ArenaAuthenticationPlugin"); ?>"
+                        <input type="submit" name="update_arenaAuthenticatoinPluginSettings" value="<?php _e("Update Settings", "ArenaAuthenticationPlugin"); ?>" />
                     </div>
                 </form>
             </div>
