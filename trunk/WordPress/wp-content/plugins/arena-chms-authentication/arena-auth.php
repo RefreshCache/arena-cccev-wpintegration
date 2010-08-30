@@ -3,7 +3,7 @@
 Plugin Name: Arena ChMS Authentication Provider
 Plugin URI: http://redmine.refreshcache.com/projects/cccevwpintegration
 Description: This plugin will provide some basic user authentication against your Arena ChMS installation.
-Version: 0.9.0
+Version: 0.9.1
 Author: Jason Offutt
 Author URI: http://twitter.com/jasonoffutt
 License: GPL2

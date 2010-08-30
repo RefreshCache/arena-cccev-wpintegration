@@ -1,5 +1,6 @@
 ﻿<%@ WebService Language="C#" Class="AuthenticationService" %>
 
+using System.Linq;
 using System.Web.Script.Services;
 using System.Web.Services;
 using System.Xml.Serialization;
@@ -23,30 +24,27 @@ public class AuthenticationService  : WebService
         var roles = securityRoles.Split(new[] { ',' });
         var personID = PortalLogin.Authenticate(username, password, ipAddress, organizationID);
 
+        if (personID != Constants.NULL_INT && roles.Length == 0)
+        {
+            return GetWPUser(new Person(personID));
+        }
+        
         bool foundRoleMatch = false;
         RoleCollection arenaRoles = new RoleCollection();
         arenaRoles.LoadByPersonId(organizationID, personID);
-
-        foreach (var role in roles)
+        
+        foreach (var r in roles)
         {
-            foreach (var r in arenaRoles)
-            {
-                foundRoleMatch = role.Trim().ToLower() == r.RoleName.ToLower();
-            }
+            var role = r;
+            foundRoleMatch = arenaRoles.Any(ar => ar.RoleName.Trim().ToLower() == role.Trim().ToLower());
 
             if (foundRoleMatch)
             {
                 break;
             }
         }
-        
-        if (personID != Constants.NULL_INT && foundRoleMatch)
-        {
-            var person = new Person(personID);
-            return GetWPUser(person);
-        }
 
-        return null;
+        return (personID != Constants.NULL_INT && foundRoleMatch) ? GetWPUser(new Person(personID)) : null;
     }
 
     private static object GetWPUser(Person person)
