@@ -24,7 +24,7 @@ public class AuthenticationService  : WebService
         var roles = securityRoles.Split(new[] { ',' });
         var personID = PortalLogin.Authenticate(username, password, ipAddress, organizationID);
 
-        if (personID != Constants.NULL_INT && roles.Length == 0)
+        if (personID != Constants.NULL_INT && securityRoles.Trim() == string.Empty)
         {
             return GetWPUser(new Person(personID));
         }
