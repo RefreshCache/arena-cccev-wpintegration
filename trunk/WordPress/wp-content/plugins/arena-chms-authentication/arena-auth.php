@@ -1,15 +1,15 @@
 <?php
 /*
-Plugin Name: Arena ChMS Authentication Provider
+Plugin Name: Arena ChMS Login Provider
 Plugin URI: http://redmine.refreshcache.com/projects/cccevwpintegration
 Description: This plugin will provide some basic user authentication against your Arena ChMS installation.
-Version: 0.9.2
+Version: 0.9.5
 Author: Jason Offutt
 Author URI: http://twitter.com/jasonoffutt
 License: GPL2
 */
 
-/*  Copyright 2010 Arena ChMS Authentication Provider  (email : jason.offutt@cccev.com)
+/*  Copyright 2010 Arena ChMS Login Provider  (email : jason.offutt@cccev.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
@@ -270,40 +270,49 @@ if (!class_exists("ArenaAuthenticationPlugin")) {
 
             <div class="wrap">
                 <form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
-                    <h2>Arena Authentication Plugin</h2>
-                    <table>
+                    <h2 class="arena">Arena Login</h2>
+                    
+                    <table class="form-table">
                         <tr>
-                            <td><p><label for="authServicePath">Arena Authentication Service Path: </label></p></td>
+                            <td class="left" scope="row">
+                                <label for="authServicePath">Service Path: </label>
+                                <span class="small-text">Path to 'AuthenticationService.asmx' on your Arena server. Don't forget SSL if needed.</span>
+                            </td>
                             <td><input type="text" id="authServicePath" name="authServicePath" value="<?php echo $options[$this->auth_service_path_setting]; ?>" /></td>
                         </tr>
                         <tr>
-                            <td>
-                                <p><label for="orgID">Organization ID: </label></p>
+                            <td class="left" scope="row">
+                                <label for="orgID">Organization ID: </label>
+                                <span class="small-text">Arena Organization ID (It's probably "1").</span>
                             </td>
                             <td>
                                 <input type="text" id="orgID" name="orgID" value="<?php echo $options[$this->org_id_setting] ?>" />
                             </td>
                         </tr>
                         <tr>
-                            <td>
-                                <p><label for="securityRoles">Security Roles: </label></p>
+                            <td class="left" scope="row">
+                                <label for="securityRoles">Security Roles: </label>
+                                <span class="small-text">Comma-separated list of Arena security roles required to access WordPress. 
+                                    Leave blank if you want any Arena user to be able to log in.</span>
                             </td>
                             <td>
                                 <input type="text" id="securityRoles" name="securityRoles" value="<?php echo $options[$this->arena_roles]; ?>" />
                             </td>
                         </tr>
                         <tr>
-                            <td>
-                                <p><label for="defaultRole">Default WordPress Role: </label></p>
+                            <td class="left" scope="row">
+                                <label for="defaultRole">Default WordPress Role: </label>
+                                <span class="small-text">If the user doesn't have a WordPress account, one is created for them.
+                                    What role would you like them to be placed in by default?</span>
                             </td>
                             <td>
                                 <input type="text" id="defaultRole" name="defaultRole" value="<?php echo $options[$this->wp_default_role]; ?>" />
                             </td>
                         </tr>
                     </table>
-                    <div class="submit">
-                        <input type="submit" name="update_arenaAuthenticatoinPluginSettings" value="<?php _e("Update Settings", "ArenaAuthenticationPlugin"); ?>" />
-                    </div>
+                    <p class="submit">
+                        <input type="submit" name="update_arenaAuthenticatoinPluginSettings" value="<?php _e("Update Settings", "ArenaAuthenticationPlugin"); ?>" class="button-primary" />
+                    </p>
                 </form>
             </div>
             <?php
@@ -350,8 +359,16 @@ if (!class_exists("ArenaAuthenticationPlugin")) {
             }
 
             if (function_exists('add_options_page')) {
-                add_options_page('Arena Authentication', 'Arena Authentication', 9, basename(__FILE__), array(&$arena_auth, 'print_admin_page'));
+                //wp_register_style('arena-login-styles', WP_PLUGIN_URL . '/arena-chms-authentication/css/arena-login.css');
+                add_options_page('Arena Login', 'Arena Login', 9, basename(__FILE__), array(&$arena_auth, 'print_admin_page'));
+            }
+
+            $myStyleUrl = WP_PLUGIN_URL . '/arena-chms-authentication/css/arena-login.css';
+            $myStyleFile = WP_PLUGIN_DIR . '/arena-chms-authentication/css/arena-login.css';
+            if ( file_exists($myStyleFile) ) {
+                wp_register_style('arena-login-css', $myStyleUrl);
+                wp_enqueue_style( 'arena-login-css');
             }
         }
-    }
+}
 ?>
