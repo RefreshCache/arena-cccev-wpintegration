@@ -1,0 +1,42 @@
+.wrap .arena
+{
+    background: url(../images/arena-logo.png) no-repeat;
+    background-position: left 15px;
+    height: 30px;
+    display: block;
+    padding-left: 40px;
+}
+
+.wrap .form-table
+{
+    width: auto;
+}
+
+    .wrap .form-table label
+    {
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .wrap .form-table .small-text
+    {
+        color: #777777;
+        display: block;
+        font-size: 10px;
+    }
+
+    .wrap .form-table input[type="text"]
+    {
+        width: 400px;
+    }
+
+    .wrap .form-table td
+    {
+        vertical-align: top;
+        padding: 5px 10px;
+    }
+
+    .wrap .form-table td.left
+    {
+        width: 250px;
+    }
