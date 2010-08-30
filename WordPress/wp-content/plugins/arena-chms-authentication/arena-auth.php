@@ -185,9 +185,9 @@ if (!class_exists("ArenaAuthenticationPlugin")) {
 
             $options = array(
                 $this->auth_service_path_setting => '',
-                $this->org_id_setting => '',
+                $this->org_id_setting => '1',
                 $this->arena_roles => '',
-                $this->wp_default_role => ''
+                $this->wp_default_role => 'Author'
             );
 
             $devOptions = get_option($this->adminOptionsName);
