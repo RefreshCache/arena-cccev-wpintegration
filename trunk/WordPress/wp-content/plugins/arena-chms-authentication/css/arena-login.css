@@ -30,6 +30,11 @@
         width: 400px;
     }
 
+    .wrap .form-table select
+    {
+        width: 403px;
+    }
+
     .wrap .form-table td
     {
         vertical-align: top;
