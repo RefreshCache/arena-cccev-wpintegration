@@ -278,7 +278,9 @@ if (!class_exists("ArenaAuthenticationPlugin")) {
                                 <label for="authServicePath">Service Path: </label>
                                 <span class="small-text">Path to 'AuthenticationService.asmx' on your Arena server. Don't forget SSL if needed.</span>
                             </td>
-                            <td><input type="text" id="authServicePath" name="authServicePath" value="<?php echo $options[$this->auth_service_path_setting]; ?>" /></td>
+                            <td>
+                                <textarea id="authServicePath" name="authServicePath" cols="50" rows="10"><?php echo $options[$this->auth_service_path_setting]; ?></textarea>
+                            </td>
                         </tr>
                         <tr>
                             <td class="left" scope="row">
@@ -296,7 +298,7 @@ if (!class_exists("ArenaAuthenticationPlugin")) {
                                     Leave blank if you want any Arena user to be able to log in.</span>
                             </td>
                             <td>
-                                <input type="text" id="securityRoles" name="securityRoles" value="<?php echo $options[$this->arena_roles]; ?>" />
+                                <textarea id="securityRoles" name="securityRoles" cols="50" rows="10"><?php echo $options[$this->arena_roles]; ?></textarea>
                             </td>
                         </tr>
                         <tr>
