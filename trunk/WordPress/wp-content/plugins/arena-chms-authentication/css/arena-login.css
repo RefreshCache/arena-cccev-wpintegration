@@ -27,12 +27,18 @@
 
     .wrap .form-table input[type="text"]
     {
-        width: 400px;
+        width: 70px;
+    }
+
+    .wrap .form-table textarea
+    {
+        width: 250px;
+        height: 70px;
     }
 
     .wrap .form-table select
     {
-        width: 403px;
+        width: 253px;
     }
 
     .wrap .form-table td
