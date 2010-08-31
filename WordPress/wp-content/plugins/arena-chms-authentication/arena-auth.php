@@ -306,7 +306,16 @@ if (!class_exists("ArenaAuthenticationPlugin")) {
                                     What role would you like them to be placed in by default?</span>
                             </td>
                             <td>
-                                <input type="text" id="defaultRole" name="defaultRole" value="<?php echo $options[$this->wp_default_role]; ?>" />
+                                <select id="defaultRole" name="defaultRole">
+                                    <option value="">-- None Selected --</option>
+                                <?php
+                                    global $wp_roles;
+                                    $role_setting = $options[$this->wp_default_role];
+                                    foreach ( $wp_roles->role_names as $role => $name ) :
+                                ?> <option value="<?php echo $role; ?>" <?php echo strtolower($role_setting) == $role ? 'selected="selected"' : ''; ?>><?php echo $name; ?></option> <?php
+                                    endforeach
+                                ?>
+                                </select>
                             </td>
                         </tr>
                     </table>
