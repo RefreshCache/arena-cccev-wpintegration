@@ -3,9 +3,9 @@
 Plugin Name: Arena ChMS Login Provider
 Plugin URI: http://redmine.refreshcache.com/projects/cccevwpintegration
 Description: This plugin will provide some basic user authentication against your Arena ChMS installation.
-Version: 0.9.5
-Author: Jason Offutt
-Author URI: http://twitter.com/jasonoffutt
+Version: 1.0.0
+Author: Central Christian Church
+Author URI: http://www.cccev.com
 License: GPL2
 */
 
@@ -88,37 +88,43 @@ if (!class_exists("ArenaAuthenticationPlugin")) {
                 );
 
                 try {
-                    // http://arena-install-path/WebServices/Custom/CCCEV/Core/AuthenticationService.asmx?WSDL
-                    $client = new SoapClient($options[$this->auth_service_path_setting] . '?WSDL');
-                    $soapResult = $client->AuthenticateWP($params);
-                    $result = $soapResult->AuthenticateWPResult->enc_value;
+                    if (class_exists("SoapClient")) {
+                        // http://arena-install-path/WebServices/Custom/CCCEV/Core/AuthenticationService.asmx?WSDL
+                        $client = new SoapClient($options[$this->auth_service_path_setting] . '?WSDL');
+                        $soapResult = $client->AuthenticateWP($params);
+                        $result = $soapResult->AuthenticateWPResult->enc_value;
 
-                    // Check if authentication failed
-                    if (!property_exists($soapResult, 'AuthenticateWPResult') AND !$this->is_admin($username)) {
-                        $this->display_error($username);
-                        die();
+                        // Check if authentication failed
+                        if (!property_exists($soapResult, 'AuthenticateWPResult') AND !$this->is_admin($username)) {
+                            $this->display_error($username);
+                            die();
+                        }
+
+                        $user = get_userdatabylogin($username);
+
+                        // If user does not exist in WP database, create one
+                        if (!$user) {
+                            $email = $result->Email;
+                            $first_name = $result->FirstName;
+                            $last_name = $result->LastName;
+                            $display_name = $result->DisplayName;
+                            $user_id = $this->create_user($username, $password, $email, $first_name, $last_name, $display_name, $options[$this->wp_default_role]);
+                        }
+
+                        // load user object
+                        if (!$user_id) {
+                            require_once(ABSPATH . WPINC . DIRECTORY_SEPARATOR .'registration.php');
+                            $user_id = username_exists($username);
+                        }
+
+                        $user = new WP_User($user_id);
+                        $this->isAuthenticated = true;
+                        return $user;
+                    }
+                    else {
+                        return false;
                     }
 
-                    $user = get_userdatabylogin($username);
-
-                    // If user does not exist in WP database, create one
-                    if (!$user) {
-                        $email = $result->Email;
-                        $first_name = $result->FirstName;
-                        $last_name = $result->LastName;
-                        $display_name = $result->DisplayName;
-                        $user_id = $this->create_user($username, $password, $email, $first_name, $last_name, $display_name, $options[$this->wp_default_role]);
-                    }
-
-                    // load user object
-                    if (!$user_id) {
-                        require_once(ABSPATH . WPINC . DIRECTORY_SEPARATOR .'registration.php');
-                        $user_id = username_exists($username);
-                    }
-
-                    $user = new WP_User($user_id);
-                    $this->isAuthenticated = true;
-                    return $user;
                 }
                 catch (Exception $ex) {
                     return false;
@@ -241,6 +247,16 @@ if (!class_exists("ArenaAuthenticationPlugin")) {
         }
 
         public function print_admin_page() {
+
+            if (!class_exists("SoapClient")) {
+                ?>
+            <div class="updated">
+                <p><strong>
+                    <?php _e("This plug-in cannot function without 'SoapClient'. Please make sure your PHP installation on this server is configured to include SOAP.", "ArenaAuthenticationPlugin"); ?>
+                </strong></p>
+            </div>
+                <?php
+            }
 
             $options = $this->load_options();
 
